@@ -26,7 +26,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 	async def game_loop(self):
 		while True:
 			if self.pong.game_over == False and self.pong.ready == True:
-				game_state = self.pong.get_game_state() 
+				game_state = self.pong.get_game_state()
 				await self.channel_layer.group_send(
 					'game_group',
 					{

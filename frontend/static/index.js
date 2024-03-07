@@ -3,7 +3,7 @@ import { Screen } from './screen.js';
 import { Game } from './game.js';
 
 
-const gameSocket = new WebSocket(`ws://backendbi:3030/ws/socket-server/`); //
+const gameSocket = new WebSocket(`ws://localhost:3030/ws/socket-server/`);
 
 let screen = new Screen();
 
@@ -13,17 +13,14 @@ let rpaddle = new Draw(screen.width - 30, pdlIceptionHeight, 20, screen.paddleHe
 let ball = new Draw(screen.width / 2, screen.height / 2, 20, 0, screen.ctx);
 
 let game = new Game(lpaddle, rpaddle, ball, screen);
-let animationFlag = false;
-let beginPos = true;
 let maxScore = 2;
-
-
 
 gameSocket.onopen = function (e) {
 	console.log("Connection established");
 	const message = {
 		action: 'START',
 		'player_name': 'PlayerName',
+		// room id
 		paddle_l: lpaddle,
 		paddle_r: rpaddle,
 		screen: screen,
@@ -43,8 +40,8 @@ function reset() {
 game.keyDown();
 
 function loop() {
+	screen.clear();
     if (game.isOpen()) {
-		screen.clear();
 		if (game.rightPlyrScore == maxScore || game.leftPlyrScore == maxScore) {
 			reset();
 			animationFlag = false;
@@ -53,32 +50,24 @@ function loop() {
 		else {
 			screen.putScore(game.leftPlyrScore, game.rightPlyrScore);
 		}
-		lpaddle.drawRect();
-		rpaddle.drawRect();
-		ball.drawArc();
     } else {
-		screen.clear();
 		if (game.leftPlyrScore || game.rightPlyrScore) {
 			let text = game.rightPlyrScore < game.leftPlyrScore ? "Left player won!" : "Right player won!";
 			screen.putText(text, screen.width / 2, screen.height / 2 - 200);
 			screen.putScore(game.leftPlyrScore, game.rightPlyrScore);
 		}
 		screen.putText("Press enter to start the game", screen.width / 2, screen.height / 2 - 100)
-		lpaddle.drawRect();
-		rpaddle.drawRect();
-		ball.drawArc();
     }
+	lpaddle.drawRect();
+	rpaddle.drawRect();
+	ball.drawArc();
     requestAnimationFrame(loop);
 };
 
 loop();
 
 gameSocket.onmessage = function (e) {
-	const data = JSON.parse(e.data);
-	if (data['type'] === 'init') {
-		game.updateGameInterface(data);
-	}
-	else if (data['type'] === 'update') {
+	if (data['type'] === 'update') {
 		game.updateGameInterface(data);
 	}
 };

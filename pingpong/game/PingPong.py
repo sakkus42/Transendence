@@ -20,6 +20,7 @@ class PingPong:
 		self.dir_x = 3
 		self.dir_y = 1
   
+  
 	def startWithInitialValues(self, message):
 		self.paddlefunc(message)
 		self.screenfunc(message)

@@ -1,19 +1,19 @@
 all:
 
 build:
-	sudo docker compose build
+	docker compose build
 
 up:
-	sudo docker compose up
+	docker compose up
 
 down:
-	sudo docker compose down
+	docker compose down
 
 logs:
-	sudo docker compose logs -f
+	docker compose logs -f
 
 ps:
-	sudo docker compose ps
+	docker compose ps
 
 re:
 	make down

@@ -27,4 +27,4 @@ COPY . .
 EXPOSE 3030
 
 # Django uygulamasını başlatma komutu
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:3030"]
+CMD ["python3", "manage.py", "runserver", "localhost:3030"]
