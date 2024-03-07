@@ -24,7 +24,7 @@ COPY . .
 # RUN python3 manage.py makemigrations
 
 # Uygulama için gerekli portu aç
-EXPOSE 3030
+EXPOSE 8081
 
 # Django uygulamasını başlatma komutu
-CMD ["python3", "manage.py", "runserver", "localhost:3030"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8081"]

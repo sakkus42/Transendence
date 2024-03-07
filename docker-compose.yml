@@ -8,18 +8,18 @@ services:
   backend:
     container_name: backendbi
     build: ./pingpong
-    command: python manage.py runserver localhost:3030
+    command: python manage.py runserver 0.0.0.0:8081
     volumes:
-      - ./backend:/code
+      - ./pingpong:/code
     ports:
-      - "3030:3030"
+      - "8081:8081"
     networks:
       - nw
   nginx:
     build: ./frontend
     container_name: frontendbi
     ports:
-      - "54:54"
+      - "8082:8082"
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -34,7 +34,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5431:5431"
+      - "8083:8083"
     networks:
       - nw
 

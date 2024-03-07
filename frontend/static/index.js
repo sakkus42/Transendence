@@ -3,7 +3,7 @@ import { Screen } from './screen.js';
 import { Game } from './game.js';
 
 
-const gameSocket = new WebSocket(`ws://localhost:3030/ws/socket-server/`);
+const gameSocket = new WebSocket(`ws://127.0.0.1:8081/ws/socket-server/`);
 
 let screen = new Screen();
 
@@ -67,6 +67,7 @@ function loop() {
 loop();
 
 gameSocket.onmessage = function (e) {
+	const data = JSON.parse(e.data);
 	if (data['type'] === 'update') {
 		game.updateGameInterface(data);
 	}

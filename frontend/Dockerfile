@@ -5,5 +5,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 COPY templates /usr/share/nginx/html/templates
 COPY static /usr/share/nginx/html/static
-EXPOSE 80
+EXPOSE 8082
 CMD ["nginx", "-g", "daemon off;"]
