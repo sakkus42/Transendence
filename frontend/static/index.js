@@ -3,7 +3,7 @@ import { Screen } from './screen.js';
 import { Game } from './game.js';
 
 
-const gameSocket = new WebSocket(`ws://localhost:8000/ws/socket-server/`);
+const gameSocket = new WebSocket(`ws://backendbi:3030/ws/socket-server/`); //
 
 let screen = new Screen();
 
