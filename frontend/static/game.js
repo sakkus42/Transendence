@@ -17,7 +17,8 @@ export class Game {
 
 		this.speedBall = 1;
 		this.animationFlag = false;
-		this.beginPos = true;
+		// this.beginPos = true;
+		this.ready = false;
 		this.key = {
 			"enter": false,
 			"arrowUp": false,

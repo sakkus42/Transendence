@@ -56,7 +56,10 @@ function loop() {
 			screen.putText(text, screen.width / 2, screen.height / 2 - 200);
 			screen.putScore(game.leftPlyrScore, game.rightPlyrScore);
 		}
-		screen.putText("Press enter to start the game", screen.width / 2, screen.height / 2 - 100)
+		if (game.ready === false)
+			screen.putText("Waiting for players", screen.width / 2, screen.height / 2 - 100)
+		else
+			screen.putText("Press enter to start the game", screen.width / 2, screen.height / 2 - 100)
     }
 	lpaddle.drawRect();
 	rpaddle.drawRect();
@@ -68,6 +71,10 @@ loop();
 
 gameSocket.onmessage = function (e) {
 	const data = JSON.parse(e.data);
+	if (data['game_state'] === 'waiting_for_players')
+		game.ready = false;
+	if (data['game_state'] === 'game_started')
+		game.ready = true;
 	if (data['type'] === 'update') {
 		game.updateGameInterface(data);
 	}
