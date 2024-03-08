@@ -25,10 +25,11 @@ class PingPong:
 		self.paddlefunc(message)
 		self.screenfunc(message)
 		self.ballfunc(message)
+		self.ready = True
 
 
 	def update_paddle_position(self, message):
-		self.ready = True
+		# self.ready = True
 		direction = message.get('direction')
 		net_height = self.screen._height - self.screen.paddleHeight()
 
