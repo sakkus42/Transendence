@@ -3,5 +3,5 @@ from . import consumers
 
 websocket_urlpatterns = [
 	// regex to match the url
-	re_path(r'ws/socket-server/?(P<room_name>.*)$', consumers.ChatConsumer.as_asgi()),
+	re_path(r'ws/socket-server/?(P<room_name>.*)$', consumers.GameConsumer.as_asgi()),
 ]
