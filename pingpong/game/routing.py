@@ -2,5 +2,6 @@ from django.urls import re_path
 from . import consumers
 
 websocket_urlpatterns = [
-	re_path(r'ws/socket-server/room1/', consumers.GameConsumer.as_asgi()),
+	// regex to match the url
+	re_path(r'ws/socket-server/?(P<room_name>.*)$', consumers.ChatConsumer.as_asgi()),
 ]

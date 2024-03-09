@@ -1,16 +1,51 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="../static/style.css">
+	<title>Simple SPA</title>
+	<link rel="stylesheet" href="../static/style.css">
+	<script src="../static/index.js" defer></script>
+	<script type="module" src="../static/pingpong.js"></script>
 </head>
+
 <body>
-	<div id="game-area">
-		<canvas id="game-canvas" width="700" height="500"></canvas>
+
+	<div id="app">
+		<header >
+			<div class="nav">
+				<h1>My SPA</h1>
+				<button id="menu-toggle">Menu</button>
+				<nav id="main-nav">
+					<ul>
+						<li><a href="#home">Home</a></li>
+						<li><a href="#about">About</a></li>
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<main id="main-content">
+			<!-- Content will be dynamically loaded here -->
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1>Click Please</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<a href="#game">Game</a>
+					</div>
+				</div>
+			</div>
+		</main>
 	</div>
 
-	<script type='module' src="../static/index.js"></script>
-		
 </body>
+
 </html>
+
+

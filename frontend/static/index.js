@@ -1,107 +1,148 @@
-import { Draw } from './draw.js';
-import { Screen } from './screen.js';
-import { Game } from './game.js';
 
-let room_name = 'room1';
-const gameSocket = new WebSocket(`ws://127.0.0.1:8081/ws/socket-server/` + room_name + `/`);
+		// function toggleMenu() {
+		// 	const mainNav = document.getElementById('main-nav');
+		// 	mainNav.classList.toggle('open');
+		// }
 
-let screen = new Screen();
+		// function setPageTitle() {
+		// 	const hash = window.location.hash.substr(1);
 
-let pdlIceptionHeight = screen.getHghtOfPdlIncLoc();
-let lpaddle = new Draw(10, pdlIceptionHeight, 20, screen.paddleHeight(), screen.ctx);
-let rpaddle = new Draw(screen.width - 30, pdlIceptionHeight, 20, screen.paddleHeight(), screen.ctx);
-let ball = new Draw(screen.width / 2, screen.height / 2, 20, 0, screen.ctx);
+		// 	// Set page title based on hash
+		// 	let pageTitle;
+		// 	switch (hash) {
+		// 		case 'home':
+		// 			pageTitle = 'Home';
+		// 			break;
+		// 		case 'about':
+		// 			pageTitle = 'About Us';
+		// 			break;
+		// 		case 'contact':
+		// 			pageTitle = 'Contact Us';
+		// 			break;
+		// 		default:
+		// 			pageTitle = 'Page Not Found';
+		// 			break;
+		// 	}
+		// 	document.title = pageTitle + ' | My SPA';
+		// }
 
-let game = new Game(lpaddle, rpaddle, ball, screen);
-let maxScore = 2;
+		// Call the setPageTitle function to set the initial page title
+		// setPageTitle();
 
-gameSocket.onopen = function (e) {
-	console.log("Connection established");
-	const message = {
-		action: 'START',
-		'player_name': 'PlayerName',
-		// room id
-		paddle_l: lpaddle,
-		paddle_r: rpaddle,
-		screen: screen,
-		ball: ball,
-	};
-	sendMessage(message);
-};
+		// Add event listener for hashchange to update page title
+		// window.addEventListener('hashchange', setPageTitle);
 
-function reset() {
-	ball.reset();
-	lpaddle.reset();
-	rpaddle.reset();
-	dirX = 2.0;
-	dirY = 0.0;
-}
+		// Define a function to validate the contact form
+		// function validateForm() {
+		// 	const form = document.getElementById('contact-form');
+		// 	const nameInput = form.querySelector('#name');
+		// 	const emailInput = form.querySelector('#email');
+		// 	const messageInput = form.querySelector('#message');
 
-game.keyDown();
+		// 	// Check if inputs are not empty
+		// 	if (!nameInput.value.trim() || !emailInput.value.trim() || !messageInput.value.trim()) {
+		// 		alert('Please fill out all fields.');
+		// 		return false;
+		// 	}
 
-function loop() {
-	screen.clear();
-    if (game.isOpen()) {
-		if (game.rightPlyrScore == maxScore || game.leftPlyrScore == maxScore) {
-			reset();
-			animationFlag = false;
-			beginPos = true;
+		// 	// Check if email is valid
+		// 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		// 	if (!emailRegex.test(emailInput.value)) {
+		// 		alert('Please enter a valid email address.');
+		// 		return false;
+		// 	}
+
+		// 	return true;
+		// }
+
+		// Define a function to handle form submission
+		// function handleSubmit(event) {
+		// 	event.preventDefault();
+
+		// 	// Validate form
+		// 	if (!validateForm()) {
+		// 		return;
+		// 	}
+
+		// 	// Process form submission (e.g., send data to server)
+		// 	alert('Form submitted successfully!');
+		// 	// Clear form fields
+		// 	document.getElementById('contact-form').reset();
+		// }
+
+		// Add event listener for form submission
+
+		// Define a function to show loading spinner
+		// function showLoadingSpinner() {
+		// 	const contentDiv = document.getElementById('main-content');
+		// 	contentDiv.innerHTML = '<div class="spinner"></div>';
+		// }
+
+
+		// Define a function to load content based on the URL hash
+		function loadContent() {
+			// showLoadingSpinner(); // Show loading spinner
+
+			const hash = window.location.hash.substr(1);
+			const contentDiv = document.getElementById('main-content');
+			var nav = document.getElementsByClassName('nav');
+			// Fetch content from HTML files dynamically
+			if (hash === "")
+				return;
+			if (nav){
+				if (hash === "game"){
+					nav[0].style.display = 'none';
+				}
+				else
+					nav[0].style.display = 'flex';
+			}
+
+			fetch(`../templates/${hash}.html`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Page not found!');
+					}
+					return response.text();
+				})
+				.then(html => {
+					contentDiv.innerHTML = html;
+				})
+				.catch(error => {
+					console.error('Error fetching content:', error);
+					contentDiv.innerHTML = '';
+					window.location.hash = '#404';
+				});
 		}
-		else {
-			screen.putScore(game.leftPlyrScore, game.rightPlyrScore);
-		}
-    } else {
-		if (game.leftPlyrScore || game.rightPlyrScore) {
-			let text = game.rightPlyrScore < game.leftPlyrScore ? "Left player won!" : "Right player won!";
-			screen.putText(text, screen.width / 2, screen.height / 2 - 200);
-			screen.putScore(game.leftPlyrScore, game.rightPlyrScore);
-		}
-		if (game.ready === false)
-			screen.putText("Waiting for players", screen.width / 2, screen.height / 2 - 100)
-		else
-			screen.putText("Press enter to start the game", screen.width / 2, screen.height / 2 - 100)
-    }
-	lpaddle.drawRect();
-	rpaddle.drawRect();
-	ball.drawArc();
-    requestAnimationFrame(loop);
-};
+		loadContent();
+		// Call the loadContent function to initialize the content
 
-loop();
+		// Add event listener for hashchange to update content
+		// document.getElementById('menu-toggle').addEventListener('click', toggleMenu);
+		window.addEventListener('hashchange', loadContent);
+		// document.getElementById('contact-form').addEventListener('submit', handleSubmit);
 
-gameSocket.onmessage = function (e) {
-	const data = JSON.parse(e.data);
-	console.log(data);
-	if (!data)
-		return;
-	if (data['game_state'] === 'waiting_for_players')
-		game.ready = false;
-	if (data['game_state'] === 'game_started')
-		game.ready = true;
-	if (data['type'] === 'update') {
-		game.updateGameInterface(data);
-	}
-};
+		// Function to handle browser history navigation
+		// function handleHistoryNavigation() {
+		// 	window.addEventListener('popstate', loadContent);
+		// }
+
+		// Call the loadContent function to initialize the content
+
+		// Call the handleHistoryNavigation function to handle browser history navigation
+		// handleHistoryNavigation();
 
 
-export function movePlayer(direction) {
-	const message = {
-		action: 'MOVE',
-		direction: direction,
-		player_name: 'PlayerName'
-	};
-	sendMessage(message);
-}
+		// // Smooth scroll behavior for navigation links
+		// document.querySelectorAll('nav ul li a').forEach(anchor => {
+		//     anchor.addEventListener('click', function(e) {
+		//         e.preventDefault();
 
-gameSocket.onclose = function (e) {
-	console.error(e);
-	console.error('Chat socket closed unexpectedly');
-};
+		//         const hash = this.getAttribute('href');
+		//         const target = document.querySelector(hash);
 
-function sendMessage(message) {
-	gameSocket.send(JSON.stringify({
-		'message': message
-	}));
-}
-
-loop();
+		//         target.scrollIntoView({
+		//             behavior: 'smooth',
+		//             block: 'start'
+		//         });
+		//     });
+		// });

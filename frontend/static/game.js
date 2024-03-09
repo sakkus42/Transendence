@@ -1,5 +1,5 @@
 import { Draw } from './draw.js';
-import { movePlayer } from './index.js';
+import { movePlayer } from './pingpong.js';
 
 export class Game {
 	/**
