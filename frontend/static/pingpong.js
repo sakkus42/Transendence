@@ -1,9 +1,9 @@
+import { Game } from './game.js';
 import { Draw } from './draw.js';
 import { Screen } from './screen.js';
-import { Game } from './game.js';
 
 let room_name = 'room1';
-const gameSocket = new WebSocket(`ws://127.0.0.1:8081/ws/socket-server/` + room_name + `/`);
+const gameSocket = new WebSocket(`wss://0.0.0.0:8081/ws/socket-server/` + room_name + `/`);
 
 let screen = new Screen();
 
@@ -12,8 +12,13 @@ let lpaddle = new Draw(10, pdlIceptionHeight, 20, screen.paddleHeight(), screen.
 let rpaddle = new Draw(screen.width - 30, pdlIceptionHeight, 20, screen.paddleHeight(), screen.ctx);
 let ball = new Draw(screen.width / 2, screen.height / 2, 20, 0, screen.ctx);
 
-let game = new Game(lpaddle, rpaddle, ball, screen);
 let maxScore = 2;
+let leftPlyrScore = 0;
+let rightPlyrScore = 0;
+let dirX = 2.0;
+let dirY = 0.0;
+let animationFlag = false;
+let beginPos = true;
 
 gameSocket.onopen = function (e) {
 	console.log("Connection established");
@@ -36,8 +41,46 @@ function reset() {
 	dirX = 2.0;
 	dirY = 0.0;
 }
+let game = new Game(lpaddle, rpaddle, ball, screen);
 
-game.keyDown();
+
+
+function keyDown() {
+	document.addEventListener("keydown", (e) => {
+		if (e.repeat) return;
+		if (e.key == "Enter" && beginPos) {
+			movePlayer('ENTER');
+			beginPos = false;
+			animationFlag = true;
+			rightPlyrScore = 0;
+			leftPlyrScore = 0;
+		}
+		if (!this.beginPos) {
+			console.log(e.key);
+			if (e.key == "Escape")
+				reset()
+			if (e.key == "Enter")
+				movePlayer('ENTER');
+			if (e.key == "w" || e.key == "W")
+				movePlayer('UP');
+			if (e.key == "s" || e.key == "S")
+				movePlayer('DOWN');
+			if (e.key == "ArrowUp")
+				movePlayer('AUP');
+			if (e.key == "ArrowDown")
+				movePlayer('ADOWN');
+		}
+	})
+};
+
+function movePlayer(direction) {
+	const message = {
+		action: 'MOVE',
+		direction: direction,
+		player_name: 'PlayerName'
+	};
+	sendMessage(message);
+}
 
 function loop() {
 	screen.clear();
@@ -64,6 +107,7 @@ function loop() {
 	lpaddle.drawRect();
 	rpaddle.drawRect();
 	ball.drawArc();
+	keyDown();
     requestAnimationFrame(loop);
 };
 
@@ -84,14 +128,7 @@ gameSocket.onmessage = function (e) {
 };
 
 
-export function movePlayer(direction) {
-	const message = {
-		action: 'MOVE',
-		direction: direction,
-		player_name: 'PlayerName'
-	};
-	sendMessage(message);
-}
+
 
 gameSocket.onclose = function (e) {
 	console.error(e);
