@@ -2,8 +2,8 @@ import { Draw } from './draw.js';
 import { Screen } from './screen.js';
 import { Game } from './game.js';
 
-
-const gameSocket = new WebSocket(`ws://127.0.0.1:8081/ws/socket-server/`);
+let room_name = "room1";
+const gameSocket = new WebSocket(`ws://127.0.0.1:8081/ws/socket-server/` + room_name + `/`);
 
 let screen = new Screen();
 
