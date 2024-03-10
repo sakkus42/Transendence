@@ -1,10 +1,10 @@
-from game.models import Ball, Paddle, Screen, Game
 import math
 import json
 
 
 class PingPong:
 	def __init__(self, *args, **kwargs):
+		from game.models import Ball, Paddle, Screen, Game
 		super().__init__(*args, **kwargs)
 
 		self.paddle_r = Paddle()

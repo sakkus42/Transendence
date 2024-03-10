@@ -3,7 +3,7 @@ import { Draw } from './draw.js';
 import { Screen } from './screen.js';
 
 let room_name = 'room1';
-const gameSocket = new WebSocket(`wss://0.0.0.0:8081/ws/socket-server/` + room_name + `/`);
+const gameSocket = new WebSocket(`wss://0.0.0.0:8081/wss/socket-server/` + room_name + `/`);
 
 let screen = new Screen();
 
@@ -55,7 +55,7 @@ function keyDown() {
 			rightPlyrScore = 0;
 			leftPlyrScore = 0;
 		}
-		if (!this.beginPos) {
+		if (!beginPos) {
 			console.log(e.key);
 			if (e.key == "Escape")
 				reset()

@@ -27,4 +27,4 @@ COPY . .
 EXPOSE 8081
 
 # Django uygulamasını başlatma komutu
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8081"]
+CMD ["uvicorn", "pingpong.asgi:application", "--host", "0.0.0.0", "--port", "8081"]
