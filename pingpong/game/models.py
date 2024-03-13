@@ -5,19 +5,16 @@ class Game(models.Model):
     rightPaddle = models.ForeignKey('Paddle', on_delete=models.CASCADE, related_name='right_games', default=1.0)
     ball = models.ForeignKey('Ball', on_delete=models.CASCADE, default=1.0)
     screen = models.ForeignKey('Screen', on_delete=models.CASCADE)
-    speedPlayer = models.IntegerField(default=15)
-    speedBall = models.IntegerField(default=16)
-    animationFlag = models.BooleanField(default=False)
-    beginPos = models.BooleanField(default=True)
     leftPlyrScore = models.IntegerField(default=0)
     rightPlyrScore = models.IntegerField(default=0)
-    maxScore = models.IntegerField(default=2)
+    maxScore = models.IntegerField(default=5)
     dirX = models.FloatField(default=2.0)
     dirY = models.FloatField(default=0.0)
-    speedBall = models.FloatField(default=25.0)
+    speedBall = models.FloatField(default=15.0)
     speedPlayer = models.FloatField(default=30.0)
     beginPos = models.BooleanField(default=True)
     animationFlag = models.BooleanField(default=False)
+    game_over = models.BooleanField(default=False)
     
 
 class Paddle(models.Model):

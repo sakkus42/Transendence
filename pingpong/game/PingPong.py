@@ -1,6 +1,4 @@
 import math
-import json
-
 
 class PingPong:
 	def __init__(self, *args, **kwargs):
@@ -13,60 +11,53 @@ class PingPong:
 		self.ball = Ball()
 		self.game = Game()
   
-		self.speedPlayer = 50
+		self.speedPlayer = 150
 		self.ready = False
 		self.game_over = False
   
 		self.dir_x = 3
 		self.dir_y = 1
   
+		self.text = ""
+  
   
 	def startWithInitialValues(self, message):
 		self.paddlefunc(message)
 		self.screenfunc(message)
 		self.ballfunc(message)
+		self.ready = True
 
 
 	def update_paddle_position(self, message):
-		self.ready = True
 		direction = message.get('direction')
 		net_height = self.screen._height - self.screen.paddleHeight()
-
 		if  self.game_over and direction == 'ENTER':
-			self.game_over = False
+			self.reset()
 			self.game.leftPlyrScore = 0
 			self.game.rightPlyrScore = 0
-			self.reset()
+			self.dir_x = 3
+			self.dir_y = 1
 		if direction == 'UP':
 			if self.paddle_l._y - self.speedPlayer >= 0:
 				self.paddle_l._y -= self.speedPlayer
+			else:
+				self.paddle_l._y = 0
 		elif direction == 'DOWN':
 			if self.paddle_l._y + self.speedPlayer <= net_height:
 				self.paddle_l._y += self.speedPlayer
+			else:
+				self.paddle_l._y = net_height
 		elif direction == 'AUP':
 			if self.paddle_r._y - self.speedPlayer >= 0:
 				self.paddle_r._y -= self.speedPlayer
+			else:
+				self.paddle_r._y = 0
 		elif direction == 'ADOWN':
 			if self.paddle_r._y + self.speedPlayer <= net_height:
 				self.paddle_r._y += self.speedPlayer
+			else:
+				self.paddle_r._y = net_height
 
-	def notify_players(self, player_id, action):
-		message = {
-			'action': action,
-			'player_id': player_id
-		}
-		self.send(text_data=json.dumps(message))
-
-	def send_game_over_message(self, winner_name):
-		game_over_message = {
-			'message': 'Game Over',
-			'winner': winner_name,
-			'scores': {
-				'player1': 'player1_score',
-				'player2': 'player2_score'
-			}
-		}
-		self.send(text_data=json.dumps(game_over_message))
 
 	async def disconnect(self, close_code):
 		self.notify_players('leave', 'Player has left the game')
@@ -123,8 +114,7 @@ class PingPong:
 		self.ball._y = self.screen._height / 2
 		self.paddle_l._y = self.paddle_l.Ry
 		self.paddle_r._y = self.paddle_r.Ry
-		self.dir_x = 3
-		self.dir_y = 1
+		self.game_over = False
   
 	def move_the_ball(self):
 		if self.ball._y - self.ball._radius <= 0:
@@ -144,8 +134,12 @@ class PingPong:
 
 
 	def get_game_state(self):
-		if self.game.leftPlyrScore >= self.game.maxScore or self.game.rightPlyrScore >= self.game.maxScore:
+		if self.game.leftPlyrScore >= self.game.maxScore:
 			self.game_over = True
+			self.text = "Player 1 wins"
+		elif self.game.rightPlyrScore >= self.game.maxScore:
+			self.game_over = True
+			self.text = "Player 2 wins"
 		self.move_the_ball()
 		self.ball._x += self.game.speedBall * self.dir_x
 		self.ball._y += self.game.speedBall * self.dir_y
@@ -163,7 +157,6 @@ class PingPong:
 	def screenfunc(self, message):
 		self.screen._height = message['screen']['_height']
 		self.screen._width = message['screen']['_width']
-		print(self.screen._height, self.screen._width)
 		self.screen._ratio = message['screen']['_ratio']
 	
 	def ballfunc(self, message):
