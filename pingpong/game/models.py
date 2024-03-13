@@ -10,7 +10,7 @@ class Game(models.Model):
     maxScore = models.IntegerField(default=5)
     dirX = models.FloatField(default=2.0)
     dirY = models.FloatField(default=0.0)
-    speedBall = models.FloatField(default=15.0)
+    speedBall = models.FloatField(default=10.0)
     speedPlayer = models.FloatField(default=30.0)
     beginPos = models.BooleanField(default=True)
     animationFlag = models.BooleanField(default=False)
