@@ -12,22 +12,13 @@ export class Game {
 		this.rpaddle = rpaddle;
 		this.ball = ball;
 		this.screen = screen;
-		this.i = 0;
-
-		this.speedBall = 1;
+		this.rightPlyrScore = 0;
+		this.leftPlyrScore = 0;
+		this.maxScore = 5;
 		this.animationFlag = false;
-		// this.beginPos = true;
+		this.beginPos = true;
 		this.ready = false;
-		this.key = {
-			"enter": false,
-			"arrowUp": false,
-			"arrowDown": false,
-			"w": false,
-			"s": false,
-		}
 	}
-
-
 
 	updateGameInterface(gameState) {
 		if (gameState.score !== undefined)
@@ -44,7 +35,6 @@ export class Game {
 			this.rightPlyrScore = gameState['rightPlyrScore'];
 		if (gameState['leftPlyrScore'] !== undefined)
 			this.leftPlyrScore = gameState['leftPlyrScore'];
-		this.begin();
 	}
 
 
