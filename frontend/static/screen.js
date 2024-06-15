@@ -1,5 +1,6 @@
 export class Screen {
 	constructor() {
+		let shadowRoot = document.querySelector('my-game');
 		this._canvas = document.querySelector("canvas");
 		this._ctx = this._canvas.getContext("2d");
 		this._canvas.width = window.innerWidth;
