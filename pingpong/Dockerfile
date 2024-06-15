@@ -14,8 +14,7 @@ RUN apt-get update && apt-get install -y postgresql-client
 # Bağımlılıkları kur
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install requests psycopg2-binary djangorestframework
+    pip install -r requirements.txt
 
 # Uygulama kodunu kopyala
 COPY . .
